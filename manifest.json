@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Levels.fyi Liquid TC",
+  "version": "0.6.0",
+  "description": "Replace the Total Compensation column on levels.fyi with liquid TC: public stock counts because it can be sold; illiquid private-company equity is discounted by a slider you control.",
+  "permissions": ["storage", "declarativeNetRequestWithHostAccess"],
+  "host_permissions": [
+    "https://www.sec.gov/files/company_tickers_exchange.json",
+    "https://www.tsx.com/json/company-directory/search/tsx/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [{ "id": "sec_user_agent", "enabled": true, "path": "rules.json" }]
+  },
+  "action": {
+    "default_title": "Levels.fyi Liquid TC",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.levels.fyi/*", "https://levels.fyi/*"],
+      "js": ["src/aliases.js", "src/lib.js", "src/content.js"],
+      "css": ["src/content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

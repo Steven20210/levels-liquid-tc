@@ -1,0 +1,10 @@
+{
+  "name": "levels-liquid-tc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension: show liquid TC on levels.fyi",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "verify-aliases": "node scripts/verify-aliases.js"
+  }
+}

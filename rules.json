@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "User-Agent",
+          "operation": "set",
+          "value": "levels-liquid-tc/0.5 (open-source Chrome extension; personal use)"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "|https://www.sec.gov/files/company_tickers_exchange.json",
+      "resourceTypes": ["xmlhttprequest", "other"]
+    }
+  }
+]
