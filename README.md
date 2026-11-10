@@ -5,22 +5,21 @@ Chrome extension that replaces the **Total Compensation** column on levels.fyi w
 | Company | Liquid TC shown |
 | --- | --- |
 | Public | base + bonus + stock |
-| Private with regular tenders (OpenAI, Stripe, …) | base + bonus + stock × *liquid slider* (default 75%) |
-| Private | base + bonus + stock × *private slider* (default 0%) |
+| Private (with or without previous tenders) | base + bonus + stock × *private equity slider* (default 0%) |
 
-Hover a modified cell to see the original TC and why the company was classified that way.
+Each TC cell is color-coded: green = public, blue = private with previous tenders, purple = private, grey = unknown (left unchanged). Hover a cell to see the original TC and why the company was classified that way. For private companies with previous tenders, the expanded entry also shows a tenders section with sources.
 
 ## Install
 
 1. `chrome://extensions` → enable **Developer mode**
 2. **Load unpacked** → select this folder
-3. On a levels.fyi salary table, use the control bar under the header row. The toolbar popup turns the extension on or off.
+3. On a levels.fyi salary table, use the control bar under the header row: the **Liquid TC** toggle (off by default) and the private equity slider. The toolbar popup turns the whole extension on or off.
 
 ## How it works
 
 Public companies are detected by matching names against the [SEC EDGAR](https://www.sec.gov/files/company_tickers_exchange.json) and [TSX](https://tsx.com/en/listings/listing-with-us/listed-company-directory) listings, downloaded once a day. Nothing about you or the pages you view is sent anywhere.
 
-Private companies with regular employee tender offers are listed by hand in `src/data/liquidity.js`, each with sources. Full research: [tender offer research doc](https://claude.ai/artifact/V8MtBjqyW5LQE4GgDVGnH8).
+Private companies with regular employee tender offers are listed by hand in `src/data/liquidity.js`, each with sources.
 
 ## Development
 
