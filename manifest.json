@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Levels.fyi Liquid TC",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Replace the Total Compensation column on levels.fyi with liquid TC: public stock counts because it can be sold; illiquid private-company equity is discounted by a slider you control.",
   "permissions": ["storage", "declarativeNetRequestWithHostAccess"],
   "host_permissions": [
@@ -9,7 +9,7 @@
     "https://www.tsx.com/json/company-directory/search/tsx/*"
   ],
   "background": {
-    "service_worker": "src/background.js"
+    "service_worker": "src/background/background.js"
   },
   "declarative_net_request": {
     "rule_resources": [{ "id": "sec_user_agent", "enabled": true, "path": "rules.json" }]
@@ -21,8 +21,25 @@
   "content_scripts": [
     {
       "matches": ["https://www.levels.fyi/*", "https://levels.fyi/*"],
-      "js": ["src/aliases.js", "src/lib.js", "src/content.js"],
-      "css": ["src/content.css"],
+      "js": [
+        "src/data/aliases.js",
+        "src/data/liquidity.js",
+        "src/core/names.js",
+        "src/core/money.js",
+        "src/core/secIndex.js",
+        "src/core/liquid.js",
+        "src/content/state.js",
+        "src/content/dom.js",
+        "src/content/status.js",
+        "src/content/bar.js",
+        "src/content/rewrite.js",
+        "src/content/table.js",
+        "src/content/tender.js",
+        "src/content/detail.js",
+        "src/content/overview.js",
+        "src/content/main.js"
+      ],
+      "css": ["src/content/content.css"],
       "run_at": "document_idle"
     }
   ]

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const L = require('../src/lib.js');
+const L = require('../src/core');
 
 test('parseMoney handles levels.fyi formats', () => {
   assert.equal(L.parseMoney('$219K'), 219000);
@@ -86,7 +86,7 @@ test('Toronto Stock Exchange listings', () => {
 });
 
 test('aliases.js entries are well-formed', () => {
-  const raw = require('../src/aliases.js');
+  const raw = require('../src/data/aliases.js');
   for (const [brand, ticker] of Object.entries(raw)) {
     assert.ok(brand.trim(), 'empty brand');
     assert.ok(ticker === null || /^(TSX:)?[A-Z][A-Z0-9.\-]*$/.test(ticker), `bad ticker for ${brand}: ${ticker}`);
@@ -94,6 +94,20 @@ test('aliases.js entries are well-formed', () => {
   // An alias whose parent no longer trades must not fall through to a name match.
   const idx = L.buildSecIndex({ fields: ['cik', 'name', 'ticker', 'exchange'], data: [[1, 'Twitch Corp', 'TWCH', 'NYSE']] });
   assert.equal(L.matchSec(idx, ['Twitch']), null); // alias -> AMZN, which isn't in this index
+});
+
+test('names matching Object.prototype members do not crash the index', () => {
+  const fields = ['cik', 'name', 'ticker', 'exchange'];
+  // A listed company called "Constructor" must not break the whole download...
+  const listed = L.buildSecIndex({ fields, data: [[1, 'Constructor Inc', 'CTOR', 'Nasdaq']] });
+  assert.equal(L.matchSec(listed, ['Constructor']).ticker, 'CTOR');
+  // ...and an unlisted one is simply private, including after the index crosses chrome messaging
+  // (which turns it back into a plain object).
+  const idx = JSON.parse(JSON.stringify(L.buildSecIndex({ fields, data: [[1, 'Apple Inc.', 'AAPL', 'Nasdaq']] })));
+  for (const name of ['Constructor', 'constructor', '__proto__', 'toString', 'valueOf']) {
+    assert.equal(L.matchSec(idx, [name, L.slugify(name)]), null);
+  }
+  assert.equal({}.ticker, undefined); // nothing leaked onto Object.prototype
 });
 
 test('liquidTotal discounts only private equity', () => {
@@ -114,4 +128,56 @@ test('stockFromBreakdown reads combined TC cells', () => {
   assert.equal(L.stockFromBreakdown('$157,500\n$125K\n|\n$32.5K\n|\n--', order), 32500);
   assert.equal(L.stockFromBreakdown('$157,500 $125K $32.5K --', order), 32500);
   assert.equal(L.stockFromBreakdown('$157,500\n$125K | -- | --', order), 0);
+});
+
+test('liquidTotal discounts liquid-private equity with its own pct', () => {
+  assert.equal(L.liquidTotal(400000, 200000, 'liquid', 75), 350000);
+  assert.equal(L.liquidTotal(400000, 200000, 'liquid', 100), 400000);
+  assert.equal(L.liquidTotal(400000, 200000, 'unknown', 0), 400000);
+});
+
+test('matchLiquid finds curated private companies with regular tenders', () => {
+  assert.match(L.matchLiquid(['OpenAI']).note, /tender/);
+  assert.equal(L.matchLiquid(['Stripe, Inc.']).tier, 'official');
+  assert.ok(L.matchLiquid(['openai', 'open-ai']));            // slug / spacing variants
+  assert.ok(L.matchLiquid(['Anduril Industries']));          // alternate name
+  assert.ok(L.matchLiquid(['elevenlabs']));
+  assert.equal(L.matchLiquid(['TikTok']), null);             // removed: no source found
+  assert.equal(L.matchLiquid(['Vanta']), null);
+  assert.equal(L.matchLiquid(['Stripe Payments Holdings Ltd Sub']), null); // no fuzzy matching
+});
+
+test('every liquidity entry has a tier, a note and https sources', () => {
+  for (const [name, e] of Object.entries(require('../src/data/liquidity.js'))) {
+    assert.ok(['official', 'confirmed', 'press'].includes(e.tier), name + ' tier');
+    assert.ok(e.note && e.note.length > 10, name + ' note');
+    assert.ok(e.sources.length > 0 && e.sources.every((u) => u.startsWith('https://')), name + ' sources');
+  }
+});
+
+test('footerModel describes each company type and its evidence', () => {
+  const base = { orig: '$219K', liquid: 172000, stock: 47000, pct: 0, reason: 'not listed' };
+  const priv = L.footerModel({ ...base, type: 'private' });
+  assert.match(priv.title, /Private company: stock counted at 0%/);
+  assert.match(priv.summary, /Liquid TC \$172K \(original \$219K, stock \$47K\/yr counted at 0%\)/);
+  assert.equal(priv.why, 'not listed');
+  assert.equal(priv.evidence, null);
+
+  const pub = L.footerModel({ ...base, type: 'public', pct: 0 });
+  assert.match(pub.title, /Public company: stock counted at 100%/);
+  assert.match(pub.summary, /counted at 100%/); // pct ignored for public
+
+  const liq = L.footerModel({
+    ...base, type: 'liquid', pct: 75,
+    evidence: { note: 'tenders 2024-26', tierLabel: 'company announcement', sources: ['https://a.com/x', 'http://bad', 'javascript:alert(1)'] },
+  });
+  assert.match(liq.title, /regular tender offers: stock counted at 75%/);
+  assert.deepEqual(liq.evidence.sources, ['https://a.com/x']); // only https links survive
+  assert.equal(liq.why, '');                                    // evidence replaces the plain reason
+});
+
+test('footerModel sig changes with the slider so the footer refreshes', () => {
+  const i = { type: 'liquid', orig: '$300K', liquid: 280000, stock: 100000, pct: 75, reason: 'r', evidence: { note: 'n', tierLabel: 't', sources: [] } };
+  assert.notEqual(L.footerModel(i).sig, L.footerModel({ ...i, pct: 50, liquid: 250000 }).sig);
+  assert.equal(L.footerModel(i).sig, L.footerModel({ ...i }).sig);
 });

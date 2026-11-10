@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Verifies src/aliases.js against the SEC EDGAR exchange list.
+// Verifies src/data/aliases.js against the SEC EDGAR exchange list.
 //
 //   npm run verify-aliases                                  # downloads the SEC + TSX lists
 //   npm run verify-aliases -- sec.json [tsx.json]           # or uses local copies
@@ -12,8 +12,8 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const L = require('../src/lib.js');
-const RAW = require('../src/aliases.js');
+const L = require('../src/core');
+const RAW = require('../src/data/aliases.js');
 
 const SEC_URL = 'https://www.sec.gov/files/company_tickers_exchange.json';
 const TSX_URL = 'https://www.tsx.com/json/company-directory/search/tsx/%5E*';

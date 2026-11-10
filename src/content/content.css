@@ -1,0 +1,176 @@
+td.lctc-public {
+  box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.7);
+}
+
+td.lctc-private {
+  box-shadow: inset 3px 0 0 rgba(139, 92, 246, 0.9);
+}
+
+td.lctc-liquid {
+  box-shadow: inset 3px 0 0 rgba(59, 130, 246, 0.85);
+}
+
+td.lctc-unknown {
+  box-shadow: inset 3px 0 0 rgba(148, 163, 184, 0.8);
+}
+
+/* ---------- in-page control bar ---------- */
+
+tr.lctc-bar-row > td {
+  padding: 6px 16px !important;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: static;
+}
+
+.lctc-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font: 500 12px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #374151;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.lctc-toggle,
+.lctc-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.lctc-toggle input {
+  display: none;
+}
+
+.lctc-switch {
+  position: relative;
+  width: 30px;
+  height: 17px;
+  border-radius: 17px;
+  background: #d1d5db;
+  transition: background 0.15s;
+  flex: none;
+}
+.lctc-switch::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+.lctc-toggle input:checked + .lctc-switch {
+  background: #0a7d4f;
+}
+.lctc-toggle input:checked + .lctc-switch::before {
+  transform: translateX(13px);
+}
+
+.lctc-slider input[type="range"] {
+  width: 140px;
+  margin: 0;
+  accent-color: #8b5cf6;
+}
+.lctc-slider-liquid input[type="range"] {
+  accent-color: #3b82f6;
+}
+
+.lctc-bar.lctc-off .lctc-slider,
+.lctc-bar.lctc-off .lctc-legend {
+  opacity: 0.45;
+}
+
+.lctc-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #6b7280;
+  margin-left: auto;
+}
+.lctc-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-left: 6px;
+}
+.lctc-dot-private { background: #8b5cf6; }
+.lctc-dot-public { background: #10b981; }
+.lctc-dot-liquid { background: #3b82f6; }
+.lctc-dot-unknown { background: #94a3b8; }
+
+/* ---------- footer under an expanded salary entry ---------- */
+
+.lctc-footer {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(128, 128, 128, 0.35);
+  font: 12px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+  text-align: left;
+}
+.lctc-footer-public { box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.7); }
+.lctc-footer-private { box-shadow: inset 3px 0 0 rgba(139, 92, 246, 0.9); }
+.lctc-footer-liquid { box-shadow: inset 3px 0 0 rgba(59, 130, 246, 0.85); }
+.lctc-footer-title { font-weight: 600; margin-bottom: 2px; }
+.lctc-footer-row { opacity: 0.85; }
+.lctc-footer-note { opacity: 0.55; margin-top: 4px; font-size: 11px; }
+.lctc-footer a { color: inherit; text-decoration: underline; }
+
+/* ---------- "Employee tenders" section (liquid companies), under Bonus ---------- */
+
+.lctc-tender {
+  /* Full width and left-aligned with the card's other rows, whatever flex/grid the card uses. */
+  align-self: stretch;
+  justify-self: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 20px 0 0;
+  padding: 0;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.lctc-tender-head {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+.lctc-tender-note { font-size: 14px; line-height: 1.45; }
+.lctc-tender-meta { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+.lctc-tender a { color: #2563eb; text-decoration: underline; }
+
+/* Company overview page: plain section styled like the page's own (no blue strip, same font sizes). */
+.lctc-overview-tender {
+  margin: 0 0 24px;
+  padding: 0 0 24px;
+  box-shadow: none;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.lctc-overview-tender .lctc-tender-note,
+.lctc-overview-tender .lctc-tender-meta {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 1;
+  margin-top: 0;
+}
+.lctc-overview-tender .lctc-tender-meta { margin-top: 4px; }
+.lctc-tender-list { margin: 4px 0 0; padding-left: 20px; list-style: disc; }
+.lctc-tender-list li { margin: 2px 0; }
+.lctc-tender-note b { font-weight: 700; }
+.lctc-tender-meta b { font-weight: 700; }

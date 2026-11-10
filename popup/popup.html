@@ -5,30 +5,13 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <header>
-      <h1>Levels.fyi Liquid TC</h1>
-      <label class="switch" title="Replace the TC column with liquid TC">
+    <label class="row" title="Replace the TC column with liquid TC">
+      <span>Liquid TC</span>
+      <span class="switch">
         <input type="checkbox" id="enabled" />
         <span class="slider"></span>
-      </label>
-    </header>
-
-    <section>
-      <label for="pct">Count private-company equity at <b id="pctLabel">0%</b></label>
-      <input type="range" id="pct" min="0" max="100" step="5" value="0" />
-      <p class="hint">0% = private stock is worthless until IPO/tender. Public stock always counts at 100%.</p>
-    </section>
-
-    <section>
-      <div class="row">
-        <h2>Companies seen</h2>
-        <button id="refresh" title="Re-download the SEC EDGAR and TSX company lists">Refresh lists</button>
-      </div>
-      <p class="hint" id="secStatus">SEC list: loading…</p>
-      <p class="hint">Public = listed on a U.S. exchange (SEC EDGAR) or the Toronto Stock Exchange (TMX directory). Override if it's wrong.</p>
-      <ul id="companies"></ul>
-    </section>
-
+      </span>
+    </label>
     <script src="popup.js"></script>
   </body>
 </html>

@@ -9,7 +9,14 @@
 // 2. Toronto Stock Exchange — https://www.tsx.com/json/company-directory/search/tsx/^*
 //    (TMX Group, operator of the TSX): the data behind tsx.com's Listed Company Directory.
 //    Undocumented, so it's optional: if it fails we keep going with SEC data alone.
-importScripts('aliases.js', 'lib.js');
+importScripts(
+  '../data/aliases.js',
+  '../data/liquidity.js',
+  '../core/names.js',
+  '../core/money.js',
+  '../core/secIndex.js',
+  '../core/liquid.js'
+);
 
 const SEC_URL = 'https://www.sec.gov/files/company_tickers_exchange.json';
 const TSX_URL = 'https://www.tsx.com/json/company-directory/search/tsx/%5E*';

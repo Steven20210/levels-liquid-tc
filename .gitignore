@@ -1,3 +1,32 @@
+# Dependencies
 node_modules/
+
+# Chrome extension build/packaging
 *.zip
+*.crx
+*.pem
 _metadata/
+
+# Local data copies (e.g. for verify-aliases)
+sec.json
+tsx.json
+
+# Logs and coverage
+*.log
+npm-debug.log*
+coverage/
+
+# Environment
+.env
+.env.*
+
+# Dev container
+.devcontainer/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

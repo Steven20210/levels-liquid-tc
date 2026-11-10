@@ -2,6 +2,7 @@
   "name": "levels-liquid-tc",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Chrome extension: show liquid TC on levels.fyi",
   "scripts": {
     "test": "node --test test/*.test.js",
